@@ -1,39 +1,48 @@
 package com.example.demo.entity;
 
-import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Timestamp;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Board {
+
+    // PK
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private int id;
 
-    @Column(nullable = false)
+    // 작성자 이름
+    @Column(length = 50)
     private String userName;
 
-    @Column(nullable = false)
-    private Date birthDate;
+    // 게시물 제목
+    @Column(length = 50)
+    private String title;
 
-    @Column(nullable = false)
-    private String gender;
+    // 내용
+    @Column(length = 50)
+    private String contents;
 
-    @Column(nullable = false)
-    private Timestamp joinDate;
+    // 최초 작성 시간
+    private LocalDateTime createTime;
 
-    @Column(nullable = false)
-    private String email;
+    // 최근 수정 시간
+    private LocalDateTime updateTime;
 
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
-    private String phoneNumber;
-
-    @Column(nullable = false)
-    private String roles;
-
-    @Column(nullable = false)
-    private String platform;
+    @Builder
+    public Board(int id, String userName, String title, String contents, LocalDateTime createTime, LocalDateTime updateTime) {
+        this.id = id;
+        this.userName = userName;
+        this.title = title;
+        this.contents = contents;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
 }
