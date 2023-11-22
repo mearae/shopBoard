@@ -3,7 +3,6 @@ package com.example.demo.DTO;
 import com.example.demo.entity.Board;
 import lombok.*;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Setter
@@ -13,25 +12,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BoardDto {
 
+    private Long id;
+
     // 게시물 제목
-    @Column(length = 50)
     private String title;
 
     // 내용
-    @Column(length = 50)
     private String contents;
 
     // 최초 작성 시간
     private LocalDateTime createTime;
 
-    // 최근 수정 시간
-    private LocalDateTime updateTime;
-
     public Board toEntity(){
         return Board.builder()
                 .title(title)
                 .contents(contents)
-                .createTime(LocalDateTime.now())
+                .createTime(createTime)
                 .updateTime(LocalDateTime.now())
                 .build();
     }
