@@ -8,38 +8,58 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
-//@RequestMapping("/board")
+@RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
 
-    @GetMapping("/")
-    public String home(){
-        return "index";
+    @GetMapping("/create")
+    public String create(){
+        return "create";
     }
 
-    @GetMapping("/createBoard")
-    public String createBoard(){
-        return "createBoard";
+    @GetMapping("/{id}")
+    public String paging(@PathVariable Long id, Model model,
+                         @PageableDefault(page = 1) Pageable pageable){
+        BoardDto dto = boardService.findById(id);
+
+        model.addAttribute("board", dto);
+        model.addAttribute("page", pageable.getPageNumber());
+
+        return "detail";
     }
 
     @PostMapping("/save")
-    public RedirectView save(@ModelAttribute BoardDto boardDto){
-        boardService.saveBoard(boardDto);
+    public String save(@ModelAttribute BoardDto boardDto){
+        boardService.save(boardDto);
 
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://localhost:8080/paging");
-        return redirectView;
+        return "redirect:/board/paging";
     }
 
-    @GetMapping("/paging")
+    @GetMapping("/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model){
+        BoardDto dto = boardService.findById(id);
+        model.addAttribute("board", dto);
+        return "update";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute BoardDto boardDto){
+        boardService.update(boardDto);
+        return "redirect:/board/";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id){
+        boardService.delete(id);
+
+        return "redirect:/board/paging";
+    }
+
+    @GetMapping(value = {"/paging", "/"})
     public String paging(@PageableDefault(page = 1) Pageable pageable, Model model){
         Page<BoardDto> boards = boardService.paging(pageable);
 

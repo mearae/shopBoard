@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/board/update" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" th:value="${board.id}">
+    title: <input type="text" name="title"><br>
+    contents: <textarea name="contents" cols="30" rows="10"></textarea><br>
+    <input type="submit" value="수정">
+</form>
+</body>
+</html>

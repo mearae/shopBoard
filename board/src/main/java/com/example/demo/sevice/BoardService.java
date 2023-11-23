@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -18,10 +19,31 @@ import java.time.LocalDateTime;
 public class BoardService {
     private final BoardRepository boardRepository;
 
+    public BoardDto findById(Long id){
+        Board board = boardRepository.findById(id).get();
+
+        return BoardDto.toBoardDto(board);
+    }
+
     @Transactional
-    public void saveBoard(BoardDto boardDto){
+    public void save(BoardDto boardDto){
         boardDto.setCreateTime(LocalDateTime.now());
         boardRepository.save(boardDto.toEntity());
+    }
+
+    @Transactional
+    public void update(BoardDto boardDto) {
+        Optional<Board> boardOptional = boardRepository.findById(boardDto.getId());
+        Board board = boardOptional.get();
+
+        board.updateFromDto(boardDto);
+
+        boardRepository.save(board);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        boardRepository.deleteById(id);
     }
 
     // paging용 함수
@@ -39,6 +61,7 @@ public class BoardService {
                 board.getId(),
                 board.getTitle(),
                 board.getContents(),
-                board.getCreateTime()));
+                board.getCreateTime(),
+                board.getUpdateTime()));
     }
 }

@@ -8,10 +8,15 @@
   Home <br>
   <br>
   <button onclick="create()"> 글쓰기 </button>
+  <button onclick="paging()"> 목록 </button>
 </body>
 <script>
   const create = () => {
-    location.href = "/createBoard";
+    location.href = "/board/create";
+  }
+
+  const paging = () => {
+    location.href = "/board/paging";
   }
 </script>
 </html>

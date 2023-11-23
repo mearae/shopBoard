@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.DTO.BoardDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,5 +45,11 @@ public class Board {
         this.contents = contents;
         this.createTime = createTime;
         this.updateTime = updateTime;
+    }
+
+    public void updateFromDto(BoardDto boardDto){
+        // 모든 변경 사항을 셋팅
+        this.title = boardDto.getTitle();
+        this.contents = boardDto.getContents();
     }
 }
