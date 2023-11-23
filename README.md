@@ -10,6 +10,11 @@
 - id를 Long으로 수정
 - DTO에 id 추가
 - 페이징 기법 학습
+    - Pageable 객체
+    - pageable.getPageNumber() - 1; -> 시작페이지 1로
+    - repository.findAll(PageRequest.of(page, size)) -> 한 페이지 당 게시물 개수, 출현하는 페이지 번호 개수
+    - @PageableDefault(page = 1) -> 받아오는 Pageable의 첫 번호를 1로
+    - Model에 게시물을 등록해 가상의 Json 파일 생성 -> html에서 사용
 - 목록을 보여줄 paging.html 파일 생성
 - index.html로 게시판 첫 화면 설정 (글쓰기 버튼)
 ```html
@@ -49,3 +54,17 @@
 ```
 - 마지막 페이지인지 확인하고 다음 페이지로 이동하는 링크
 - 총 페이지 수를 이용해 마지막 페이지로 이동하는 링크
+#### 2023.11.23
+- 게시판과 Home의 구분을 위해 HomeController 생성
+- 개발 편의성을 위해 DTO에 Board를 DTO로 변경하는 함수 추가
+- /board/~ 로 링크 수정
+- createBoard.html을 create.html로 변경
+- 게시물 보기 작성
+  - @GetMapping("/{id}") 과 @PathVariable Long id -> 게시물 번호로 링크 작성
+  - model에 board(게시물), page(페이지 번호) 등록
+  - detail.html 작성(목록, 수정, 삭제 버튼)
+- 게시물 수정 작성
+  - update.html 작성
+  - 먼저 /update/{id} 링크로 해당 id의 게시물을 model에 넣음 -> /update 링크로 변경된 게시물 제목과 내용을 저장 -> 페이지 목록 화면(/board/)으로 이동
+- 게시물 삭제 작성
+  - /delete/{id} 링크로 해당 id의 게시물을 삭제 -> 페이지 목록 화면(/board/paging)으로 이동
