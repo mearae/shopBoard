@@ -37,8 +37,8 @@ public class BoardDto {
     public static BoardDto toBoardDto(Board board){
         return new BoardDto(
                 board.getId(),
+                board.getTitle(),
                 board.getContents(),
-                board.getUserName(),
                 board.getCreateTime(),
                 board.getUpdateTime() );
     }

@@ -1,6 +1,6 @@
 # shopBoard
 
-##### 2023.11.21
+#### 2023.11.21
 - 게시판에 글을 등록
 - createBoard.html 파일을 이용해 작성자와 작성내용을 post로 보냄
 - 작성시간은 자동으로 작성 당시의 현재시간으로 고정되도록 설정
@@ -54,6 +54,7 @@
 ```
 - 마지막 페이지인지 확인하고 다음 페이지로 이동하는 링크
 - 총 페이지 수를 이용해 마지막 페이지로 이동하는 링크
+
 #### 2023.11.23
 - 게시판과 Home의 구분을 위해 HomeController 생성
 - 개발 편의성을 위해 DTO에 Board를 DTO로 변경하는 함수 추가
@@ -68,3 +69,16 @@
   - 먼저 /update/{id} 링크로 해당 id의 게시물을 model에 넣음 -> /update 링크로 변경된 게시물 제목과 내용을 저장 -> 페이지 목록 화면(/board/)으로 이동
 - 게시물 삭제 작성
   - /delete/{id} 링크로 해당 id의 게시물을 삭제 -> 페이지 목록 화면(/board/paging)으로 이동
+
+#### 2023.11.24
+- 게시물과 댓글의 연관관계 생성
+ - '1:다' 연관 관계
+    - Board : @OneToMany(mappedBy = "board", ...)
+    - Comment : @ManyToOne(...)
+ - 소유(1)와 비소유(다)(여기에서 확인)
+ - cascade = CascadeType.REMOVE : 소유자(게시물)이 삭제될 경우 그 소유물(댓글)이 자동 삭제
+ - orphanRemoval = true : 만약 연결 관계가 끊어지면 삭제
+ - fetch = FetchType.LAZY : 지연로딩 (성능 최적화)
+ - @JoinColumn(name = "board_id") : 연관관계 생성 시 넣어질 이름
+- Comment 객체로 댓글 Entity 생성
+- 댓글 저장 구현 -> detail.html에 댓글들을 보여주는 함수 구현
