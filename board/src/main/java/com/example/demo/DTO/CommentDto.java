@@ -1,6 +1,5 @@
 package com.example.demo.DTO;
 
-import com.example.demo.entity.Board;
 import com.example.demo.entity.Comment;
 import lombok.*;
 
@@ -19,7 +18,7 @@ public class CommentDto {
 
     private Long boardId;
 
-    public Comment toEntitiy(){
+    public Comment toEntity(){
         return Comment.builder()
                 .id(id)
                 .contents(contents)

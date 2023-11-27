@@ -2,6 +2,11 @@ server:
   port: 8080
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 50MB
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3307/green?serverTimezone=Asia/Seoul&charatorEncoding=UTF-8

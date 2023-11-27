@@ -9,6 +9,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @Controller
@@ -33,8 +36,9 @@ public class BoardController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute BoardDto boardDto){
-        boardService.save(boardDto);
+    public String save(@ModelAttribute BoardDto boardDto,
+                       @RequestParam MultipartFile[] files) throws IOException {
+        boardService.save(boardDto, files);
 
         return "redirect:/board/paging";
     }
@@ -47,8 +51,9 @@ public class BoardController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute BoardDto boardDto){
-        boardService.update(boardDto);
+    public String update(@ModelAttribute BoardDto boardDto,
+                         @RequestParam MultipartFile[] files) throws IOException {
+        boardService.update(boardDto, files);
         return "redirect:/board/";
     }
 

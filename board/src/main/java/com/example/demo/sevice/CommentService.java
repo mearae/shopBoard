@@ -24,9 +24,10 @@ public class CommentService {
     public Comment save(CommentDto commentDto) {
         Optional<Board> optionalBoard = boardRepository.findById(commentDto.getBoardId());
         if (optionalBoard.isPresent()){
-            Comment comment = commentDto.toEntitiy();
+            Comment comment = commentDto.toEntity();
             Board board = optionalBoard.get();
             Hibernate.initialize(board.getComments());
+            Hibernate.initialize(board.getFiles());
 
             comment.updateFromBoard(board);
             Comment idComment = commentRepository.save(comment);
@@ -37,7 +38,11 @@ public class CommentService {
         }
     }
 
-    public List<Comment> commentList(Long id) {
-        return boardRepository.findById(id).get().getComments();
+    public List<CommentDto> commentList(Long id) {
+        List<Comment> comments = commentRepository.findAllByBoard_id(id);
+        for (Comment c : comments){
+            System.out.println("aaaaa : " + c.getId());
+        }
+        return null;
     }
 }

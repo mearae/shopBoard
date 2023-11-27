@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.DTO.BoardDto;
 import com.example.demo.DTO.CommentDto;
+import com.example.demo.DTO.FileDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,6 +49,9 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> comments = new LinkedList<>();
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<File> files = new LinkedList<>();
+
     @Builder
     public Board(Long id, String userName, String title, String contents, LocalDateTime createTime, LocalDateTime updateTime) {
         this.id = id;
@@ -65,6 +69,13 @@ public class Board {
     }
 
     public void updateFromComment(CommentDto commentDto){
-        this.comments.add(commentDto.toEntitiy());
+        this.comments.add(commentDto.toEntity());
     }
+
+    public void updateFromFile(FileDto fileDto){
+        this.files.add(fileDto.toEntity());
+    }
+
+    public void clearFile(){this.files.clear();}
+
 }

@@ -27,6 +27,10 @@
         <th>contents</th>
         <td th:text="${board.getContents}"></td>
     </tr>
+    <tr>
+        <th>files</th>
+
+    </tr>
 </table>
 <button onclick="listReq()">목록</button>
 <button onclick="updateReq()">수정</button>
@@ -73,9 +77,8 @@
                 "boardId": jsId
             },
             success: function (res) {
-                getCommnetList();
+                getCommentList();
                 // 사용자가 댓글을 작성을 마치면 입력 필드를 비워서 다음 댓글을 작성할 때 기존에 입력된 텍스트를 비움.
-                document.getElementById('comment-list').innerHTML = output;
                 document.getElementById('writer').value = '';
                 document.getElementById('contents').value = '';
             },
@@ -90,11 +93,13 @@
     })
 
     function getCommentList() {
+        const bId = [[${board.id}]];
         $.ajax({
-            // 요청방식: post, 요청주소: /comment/save, 요청데이터: 작성자, 작성내용, 게시글번호
             type: "get",
             url: "/comment/comments",
-            data: [[${board.id}]],
+            data: {
+                "id": bId
+            },
             success: function (res) {
                 console.log("요청성공", res);
                 let output = "";
@@ -133,6 +138,7 @@
                     output += "</table></div>";
                     output += "</div>";
                 }
+                document.getElementById('comment-list').innerHTML = output;
             },
             error: function (err) {
                 console.log("요청실패", err);

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.DTO.BoardDto;
 import com.example.demo.DTO.CommentDto;
 import com.example.demo.entity.Board;
 import com.example.demo.entity.Comment;
@@ -36,9 +37,10 @@ public class CommentController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity commentList(@ModelAttribute Long boardId){
-        System.out.println(boardId);
-        List<Comment> comments = commentService.commentList(boardId);
+    public ResponseEntity commentList(@ModelAttribute BoardDto boardDto){
+        Long boardId = boardDto.getId();
+        System.out.println("boardId : " + boardId);
+        List<CommentDto> comments = commentService.commentList(boardId);
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
