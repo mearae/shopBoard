@@ -1,4 +1,4 @@
-package com.example.demo.sevice;
+package com.example.demo.service;
 
 import com.example.demo.DTO.CommentDto;
 import com.example.demo.entity.Board;
@@ -10,6 +10,7 @@ import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,25 +25,28 @@ public class CommentService {
     public Comment save(CommentDto commentDto) {
         Optional<Board> optionalBoard = boardRepository.findById(commentDto.getBoardId());
         if (optionalBoard.isPresent()){
-            Comment comment = commentDto.toEntity();
             Board board = optionalBoard.get();
             Hibernate.initialize(board.getComments());
-            Hibernate.initialize(board.getFiles());
+            Hibernate.initialize(board.getBoardFiles());
 
-            comment.updateFromBoard(board);
-            Comment idComment = commentRepository.save(comment);
-            board.updateFromComment(CommentDto.toCommentDto(idComment));
-            return idComment;
+            Comment comment = Comment.builder()
+                    .contents(commentDto.getContents())
+                    .board(board)
+                    .build();
+            commentRepository.save(comment);
+            return comment;
         } else {
             return null;
         }
     }
 
     public List<CommentDto> commentList(Long id) {
-        List<Comment> comments = commentRepository.findAllByBoard_id(id);
+        List<Comment> comments = commentRepository.findByBoard_id(id);
+        List<CommentDto> commentDtos = new LinkedList<>();
         for (Comment c : comments){
             System.out.println("aaaaa : " + c.getId());
+            commentDtos.add(CommentDto.toCommentDto(c));
         }
-        return null;
+        return commentDtos;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.demo.DTO;
 
-import com.example.demo.entity.File;
+import com.example.demo.entity.BoardFile;
 import lombok.*;
 
 @Setter
@@ -16,25 +16,30 @@ public class FileDto {
 
     private String fileType;
 
+    // 랜덤 키
+    private String uuid;
+
     private Long fileSize;
 
     private Long boardId;
 
-    public File toEntity(){
-        return File.builder()
+    public BoardFile toEntity(){
+        return BoardFile.builder()
                 .filePath(filePath)
                 .fileName(fileName)
+                .uuid(uuid)
                 .fileType(fileType)
                 .fileSize(fileSize)
                 .build();
     }
 
-    public static FileDto toFileDto(File file){
+    public static FileDto toFileDto(BoardFile boardFile){
         return new FileDto(
-                file.getFilePath(),
-                file.getFileName(),
-                file.getFileType(),
-                file.getFileSize(),
-                file.getBoard().getId());
+                boardFile.getFilePath(),
+                boardFile.getFileName(),
+                boardFile.getUuid(),
+                boardFile.getFileType(),
+                boardFile.getFileSize(),
+                boardFile.getBoard().getId());
     }
 }

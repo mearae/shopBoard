@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.DTO.BoardDto;
-import com.example.demo.sevice.BoardService;
+import com.example.demo.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +31,7 @@ public class BoardController {
 
         model.addAttribute("board", dto);
         model.addAttribute("page", pageable.getPageNumber());
+        model.addAttribute("files", boardService.byBoardFiles(id));
 
         return "detail";
     }

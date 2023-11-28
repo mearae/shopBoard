@@ -50,7 +50,7 @@ public class Board {
     private List<Comment> comments = new LinkedList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<File> files = new LinkedList<>();
+    private List<BoardFile> boardFiles = new LinkedList<>();
 
     @Builder
     public Board(Long id, String userName, String title, String contents, LocalDateTime createTime, LocalDateTime updateTime) {
@@ -72,10 +72,5 @@ public class Board {
         this.comments.add(commentDto.toEntity());
     }
 
-    public void updateFromFile(FileDto fileDto){
-        this.files.add(fileDto.toEntity());
-    }
-
-    public void clearFile(){this.files.clear();}
-
+    public void clearFile(){this.boardFiles.clear();}
 }

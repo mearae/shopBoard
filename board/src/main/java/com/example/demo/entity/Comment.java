@@ -33,8 +33,4 @@ public class Comment {
         this.contents = contents;
         this.board = board;
     }
-
-    public void updateFromBoard(Board board){
-        this.board = board;
-    }
 }
