@@ -1,9 +1,99 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>detail</title>
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            width: 50px;
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        button {
+            flex: 0 0 auto;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #fff;
+            line-height: 18px;
+            vertical-align: top;
+            background-color: #4CAF50;
+            font-weight: normal;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #comment-write input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        #comment-write button {
+            flex: 0 0 auto;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #fff;
+            line-height: 18px;
+            vertical-align: top;
+            background-color: #4CAF50;
+            font-weight: normal;
+            border: none;
+            cursor: pointer;
+        }
+
+        #comment-write button:hover {
+            background-color: #45a049;
+        }
+
+        #comment-list table {
+            width: 100%;
+        }
+
+        #comment-list th, #comment-list td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #comment-list th {
+            background-color: #f2f2f2;
+        }
+
+        #comment-list h6 {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
 <table>
@@ -15,10 +105,10 @@
         <th>title</th>
         <td th:text="${board.getTitle}"></td>
     </tr>
-<!--    <tr>-->
-<!--        <th>writer</th>-->
-<!--        <td th:text="${board.getUserName}"></td>-->
-<!--    </tr>-->
+    <!--    <tr>-->
+    <!--        <th>writer</th>-->
+    <!--        <td th:text="${board.getUserName}"></td>-->
+    <!--    </tr>-->
     <tr>
         <th>date</th>
         <td th:text="${board.getCreateTime}"></td>
@@ -29,19 +119,20 @@
     </tr>
     <tr>
         <th>files</th>
-
+        <td>
+            <div th:if="${files != null}">
+                <ul>
+                    <li th:each="file : ${files}">
+                        <!-- 다운로드 링크 추가 -->
+                        <a th:href="@{/download/{uuid}/{filename}(uuid=${file.uuid}, filename=${file.fileName})}" th:text="${file.fileName}">download</a>
+                    </li>
+                </ul>
+            </div>
+        </td>
     </tr>
 </table>
 
-<div th:if="${files != null}">
-    <h3>첨부 파일</h3>
-    <ul>
-        <li th:each="file : ${files}">=
-            <!-- 다운로드 링크 추가 -->
-            <a th:href="@{/download/{uuid}/{filename}(uuid=${file.uuid}, filename=${file.fileName})}">Download</a>
-        </li>
-    </ul>
-</div>
+
 
 <button onclick="listReq()">목록</button>
 <button onclick="updateReq()">수정</button>
@@ -115,19 +206,24 @@
                 console.log("요청성공", res);
                 let output = "";
                 if(res.length > 0){
+                    output += "<div>";
+                    output += "<div><table class='table'>";
+                    output += "<tr>";
+                    output += "<th>" + "번호" + "</td>";
+                    output += "<th>" + "작성자" + "</td>";
+                    output += "<th>" + "댓글 내용" + "</td>";
+                    //output += "<th>" + res[i].createdTime + "</td>";
+                    output += "</tr>";
                     for (let i in res) {
-                        output += "<div>";
-                        output += "<div><table class='table'>";
                         output += "<tr>";
                         output += "<td>" + res[i].id + "</td>";
                         output += "<td>" + res[i].writer + "</td>";
                         output += "<td>" + res[i].contents + "</td>";
                         //output += "<td>" + res[i].createdTime + "</td>";
                         output += "</tr>";
-                        output += "</table></div>";
-                        output += "</div>";
                     }
-                    output += "</table>";
+                    output += "</table></div>";
+                    output += "</div>";
                 } else {
                     output += "<div>";
                     output += "<div><table class='table'><h6><strong>등록된 댓글이 없습니다.</strong></h6>";
