@@ -163,13 +163,176 @@
   - 피일 저장 방법 일부 수정
   - 게시물 저장할 때 model에 files라는 이름으로 첨부파일 전달
   - File에서 BoardFile로 클래스명 수정
+  ```java
+  @Transactional
+public void save(BoardDto boardDto, MultipartFile[] files) throws IOException{
+    boardDto.setCreateTime(LocalDateTime.now());
+    // 게시글 DB에 저장 후 PK 받아옴
+    Long id = boardRepository.save(boardDto.toEntity()).getId();
+    Board board = boardRepository.findById(id).get();
+
+    // 추가
+    if (!files[0].isEmpty()) {
+        Path uploadPath = Paths.get(filePath);
+
+        // 만약 경로가 없다면... 경로 생성
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        for (MultipartFile file : files) {
+            // 파일명 추출
+            String originalFilename = file.getOriginalFilename();
+
+            // 확장자 추출
+            String formatType = originalFilename.substring(
+                    originalFilename.lastIndexOf("."));
+
+            // UUID 생성
+            String uuid = UUID.randomUUID().toString();
+
+            // 경로 지정
+            String path = filePath + uuid + originalFilename;
+
+            // 파일을 물리적으로 저장 (DB에 저장 X)
+            file.transferTo( new File(path) );
+
+            BoardFile boardFile = BoardFile.builder()
+                    .filePath(filePath)
+                    .fileName(originalFilename)
+                    .uuid(uuid)
+                    .fileType(formatType)
+                    .fileSize(file.getSize())
+                    .board(board)
+                    .build();
+
+            fileRepository.save(boardFile);
+        }
+    }
+}
+  ```
 - detail.html에서 첨부파일을 다운로드 할 수 있도록 링크 추가
 
 - 일부 개인적인 변경사항
   - 적은 댓글들이 항상 나올 수 있도록 수정
+    - 댓글 생성 시 작성된 댓글들이 나오는 함수에서 댓글들을 보여주는 함수를 따로 만들어 사용
+    ```javaScript
+    function getCommentList() {
+    const bId = [[${board.id}]];
+    $.ajax({
+        type: "get",
+        url: "/comment/comments",
+        data: {
+            "id": bId
+        },
+        success: function (res) {
+            console.log("요청성공", res);
+            let output = "";
+            if(res.length > 0){
+                output += "<div>";
+                output += "<div><table class='table'>";
+                output += "<tr>";
+                output += "<th>" + "번호" + "</td>";
+                output += "<th>" + "작성자" + "</td>";
+                output += "<th>" + "댓글 내용" + "</td>";
+                //output += "<th>" + res[i].createdTime + "</td>";
+                output += "</tr>";
+                for (let i in res) {
+                    output += "<tr>";
+                    output += "<td>" + res[i].id + "</td>";
+                    output += "<td>" + res[i].writer + "</td>";
+                    output += "<td>" + res[i].contents + "</td>";
+                    //output += "<td>" + res[i].createdTime + "</td>";
+                    output += "</tr>";
+                }
+                output += "</table></div>";
+                output += "</div>";
+            } else {
+                output += "<div>";
+                output += "<div><table class='table'><h6><strong>등록된 댓글이 없습니다.</strong></h6>";
+                output += "</table></div>";
+                output += "</div>";
+            }
+            document.getElementById('comment-list').innerHTML = output;
+        },
+        error: function (err) {
+            console.log("요청실패", err);
+        }
+    });
+}
+    ```
   - 게시물 수정 시 제목, 내용, 첨부파일을 전부 지우고 새로 작성할 수 있도록 수정
 
 #### 2023.11.29
 - html 파일에 style 추가
 - 글작성 시 첨부한 파일의 이름이 차례로 나옴
-- 게시글의 첨부된 파일들이 이름으로 나옴
+```javaScript
+function updateSelectedFiles(event) {
+    const files = event.target.files;
+    const selectedFilesContainer = document.getElementById('selected-files');
+    selectedFilesContainer.innerHTML = '';
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileName = file.name;
+        const fileItem = document.createElement('div');
+        fileItem.textContent = fileName;
+        selectedFilesContainer.appendChild(fileItem);
+    }
+}
+```
+- 게시글의 첨부된 파일들이 각 이름으로 나오고 각 파일을 다운로드 가능
+```html
+    <th>files</th>
+    <td>
+        <div th:if="${files != null}">
+            <ul>
+                <li th:each="file : ${files}">
+                    <!-- 다운로드 링크 추가 -->
+                    <a th:href="@{/download/{uuid}/{filename}(uuid=${file.uuid}, filename=${file.fileName})}" th:text="${file.fileName}">download</a>
+                </li>
+            </ul>
+        </div>
+    </td>
+```
+
+#### 2023.11.30
+- 게시글이 없을 경우의 목록 페이지의 목록과 페이지 이동을 수정
+```html
+<span th:if="${boardList.totalPages == 0}">
+    <tr>
+        <td colspan="3">
+            <div>등록된 게시글이 없습니다.</div>
+        </td>
+    </tr>
+</span>
+<span th:unless="${boardList.totalPages == 0}">
+    ...
+</span>
+```
+- 처음, 이전, 다음, 마지막 버튼의 선택 불가 상황 추가
+```html
+<span th:if="${boardList.first}">
+    <span class="active" th:text="처음"></span>
+    <span class="active" th:text="이전"></span>
+</span>
+<span th:unless="${boardList.first}">
+    ...처음, 이전
+</span>
+<span class="paging-links" th:each="page: ${#numbers.sequence(startPage, endPage)}">
+    <!-- 현재페이지는 링크 없이 숫자만 -->
+    <span th:if="${page == boardList.number + 1}" class="active" th:text="${page}"></span>
+    <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+    <span th:unless="${boardList.totalPages == 0}">
+    ...현재 외 페이지
+    </span>
+</span>
+<span th:if="${boardList.last}">
+    <span class="active" th:text="다음"></span>
+    <span class="active" th:text="마지막"></span>
+</span>
+<span th:unless="${boardList.last}">
+    ...다음, 마지막
+</span>
+```
+- 게시글의 제목을 필수로 입력하도록 수정 (nullable, required)
+- 이전에 만든 KakaoLogin과 연결 시험(일부 경로 수정)
