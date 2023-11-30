@@ -44,7 +44,6 @@ public class CommentService {
         List<Comment> comments = commentRepository.findByBoard_id(id);
         List<CommentDto> commentDtos = new LinkedList<>();
         for (Comment c : comments){
-            System.out.println("aaaaa : " + c.getId());
             commentDtos.add(CommentDto.toCommentDto(c));
         }
         return commentDtos;

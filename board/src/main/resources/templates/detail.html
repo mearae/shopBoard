@@ -111,7 +111,7 @@
     <!--    </tr>-->
     <tr>
         <th>date</th>
-        <td th:text="${board.getCreateTime}"></td>
+        <td th:text="*{#temporals.format(board.getCreateTime, 'yyyy.MM.dd hh:mm:ss')}"></td>
     </tr>
     <tr>
         <th>contents</th>

@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import com.example.demo.DTO.BoardDto;
 import com.example.demo.DTO.CommentDto;
-import com.example.demo.DTO.FileDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,11 +27,11 @@ public class Board {
     private String userName;
 
     // 게시물 제목
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String title;
 
     // 내용
-    @Column(length = 50)
+    @Column
     private String contents;
 
     // 최초 작성 시간

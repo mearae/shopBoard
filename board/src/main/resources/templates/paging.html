@@ -46,7 +46,7 @@
         }
 
         .table a:hover {
-            font-weight: bold;
+            text-decoration: underline;
         }
 
         .paging-links {
@@ -88,34 +88,52 @@
         <th>제목</th>
         <th>작성일</th>
     </tr>
-    <span th:if="${page == 0}">
-        <tr th:text="등록된 게시글이 없습니다."></tr>
+    <span th:if="${boardList.totalPages == 0}">
+        <tr>
+            <td colspan="3">
+                <div>등록된 게시글이 없습니다.</div>
+            </td>
+        </tr>
     </span>
-    <span th:unless="${page == 0}">
+    <span th:unless="${boardList.totalPages == 0}">
         <tr th:each="board: ${boardList}">
             <td th:text="${board.getId}"></td>
             <td> <a th:href="@{${board.getId}|(page = ${boardList.number + 1})}" th:text="${board.getTitle}"></a></td>
-            <td th:text="*{#temporals.format(board.getCreateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="*{#temporals.format(board.getCreateTime, 'yyyy.MM.dd')}"></td>
         </tr>
     </span>
 </table>
-<a th:href="@{/board/paging(page=1)}">처음</a>
-<a th:href="${boardList.first} ? '#' : @{/board/paging(page=${boardList.number})}">이전</a>
+
+<span th:if="${boardList.first}">
+    <span class="active" th:text="처음"></span>
+    <span class="active" th:text="이전"></span>
+</span>
+<span th:unless="${boardList.first}">
+    <a th:href="@{/board/paging(page=1)}">처음</a>
+    <a th:href="@{/board/paging(page=${boardList.number})}">이전</a>
+</span>
 
 <span class="paging-links" th:each="page: ${#numbers.sequence(startPage, endPage)}">
     <!-- 현재페이지는 링크 없이 숫자만 -->
     <span th:if="${page == boardList.number + 1}" class="active" th:text="${page}"></span>
     <!-- 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 -->
+    <span th:unless="${boardList.totalPages == 0}">
     <span th:unless="${page == boardList.number + 1}">
         <a th:href="@{/board/paging(page=${page})}" th:text="${page}"></a>
     </span>
+    </span>
 </span>
 
-<!-- 다음 링크 활성화 비활성화
-    사용자: 2페이지, getNumber: 1, 3페이지-->
-<a th:href="${boardList.last} ? '#' : @{/board/paging(page=${boardList.number + 2})}">다음</a>
-<!-- 마지막 페이지로 이동 -->
-<a th:href="@{/board/paging(page=${boardList.totalPages})}">마지막</a>
+<span th:if="${boardList.last}">
+    <span class="active" th:text="다음"></span>
+    <span class="active" th:text="마지막"></span>
+</span>
+<span th:unless="${boardList.last}">
+    <!-- 다음 링크 활성화 비활성화   사용자: 2페이지, getNumber: 1, 3페이지-->
+    <a th:href="@{/board/paging(page=${boardList.number + 2})}">다음</a>
+    <!-- 마지막 페이지로 이동 -->
+    <a th:href="@{/board/paging(page=${boardList.totalPages})}">마지막</a>
+</span>
 
 </body>
 
