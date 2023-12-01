@@ -14,6 +14,8 @@ public class BoardDto {
 
     private Long id;
 
+    private String writer;
+
     // 게시물 제목
     private String title;
 
@@ -39,6 +41,7 @@ public class BoardDto {
     public static BoardDto toBoardDto(Board board){
         return new BoardDto(
                 board.getId(),
+                board.getUser().getName(),
                 board.getTitle(),
                 board.getContents(),
                 board.getCreateTime(),

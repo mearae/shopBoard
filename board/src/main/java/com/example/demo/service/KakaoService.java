@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.DTO.UserRequest;
 import com.example.demo.core.error.exception.Exception401;
 import com.example.demo.core.error.exception.Exception500;
 import com.example.demo.entity.User;
@@ -71,65 +70,6 @@ public class KakaoService {
         }
     }
 
-    @Transactional
-    // kakaoConnect의 결과값(인가코드)가 아래의 매개변수 code로 들어감
-    public String kakaoLogin(String code,HttpSession session){
-        try {
-            // 인카코드에 있는 토큰을 추출
-            JsonNode token = getKakaoAccessToken(code);
-            String access_token = token.get("access_token").asText();
-            // Bear 넣어야 할지도?
-            String refresh_token = token.get("refresh_token").asText();
-
-            session.setAttribute("access_token", access_token);
-            session.setAttribute("platform", "kakao");
-
-            // 로그인한 클라이언트의 사용자 정보를 json 타입으로 획득
-            JsonNode userInfo = getKakaoUserInfo(access_token);
-            String email = userInfo.path("kakao_account").path("email").asText();
-            if (!checkEmail(email)) {
-                kakaoJoin(userInfo, access_token);
-            }
-
-            User user = userRepository.findByEmail(email).orElseThrow(
-                    () -> new Exception401("인증되지 않았습니다.")
-            );
-            user.setAccess_token(access_token);
-            user.setRefresh_token(refresh_token);
-            userRepository.save(user);
-            return "http://localhost:8080/logined";
-        } catch (Exception e){
-            throw new Exception401("인증되지 않음.");
-        }
-    }
-
-    public boolean checkEmail(String email){
-        // 동일한 이메일이 있는지 확인.
-        Optional<User> users = userRepository.findByEmail(email);
-        return users.isPresent();
-    }
-
-    public void kakaoJoin(JsonNode userInfo, String access_token) {
-        // 지금은 권한이 제한되어 있어 비밀번호는 카카오톡 토큰으로, 전화번호는 임시로 설정
-        JsonNode kakao_account = userInfo.path("kakao_account");
-        String encodedPassword = passwordEncoder.encode(access_token);
-        JsonNode properties = userInfo.path("properties");
-
-        User user = User.builder()
-                .email(kakao_account.path("email").asText())
-                .password(encodedPassword)
-                .name(properties.path("nickname").asText())
-                .phoneNumber("01012341234")
-                .roles(Collections.singletonList("ROLE_USER"))
-                .platform("kakao")
-                .build();
-        try {
-            userRepository.save(user);
-        } catch (Exception e) {
-            throw new Exception500(e.getMessage());
-        }
-    }
-
     public JsonNode getKakaoAccessToken(String code) {
         // 요청 보낼 링크(토큰 얻기)
         final String requestUrl = "https://kauth.kakao.com/oauth/token";
@@ -145,11 +85,73 @@ public class KakaoService {
         return response.getBody();
     }
 
+    @Transactional
+    // kakaoConnect의 결과값(인가코드)가 아래의 매개변수 code로 들어감
+    public String kakaoLogin(String code,HttpSession session){
+        try {
+            // 인카코드에 있는 토큰을 추출
+            JsonNode token = getKakaoAccessToken(code);
+            String access_token = token.get("access_token").asText();
+            // Bear 넣어야 할지도?
+            String refresh_token = token.get("refresh_token").asText();
+
+            session.setAttribute("access_token", access_token);
+            session.setAttribute("platform", "kakao");
+
+            // 로그인한 클라이언트의 사용자 정보를 json 타입으로 획득
+            User user = kakaoJoin(access_token);
+            user.setAccess_token(access_token);
+            user.setRefresh_token(refresh_token);
+            userRepository.save(user);
+            return "http://localhost:8080/logined";
+        } catch (Exception e){
+            throw new Exception401("인증되지 않음.");
+        }
+    }
+
+    public boolean checkEmail(String email){
+        // 동일한 이메일이 있는지 확인.
+        Optional<User> users = userRepository.findByEmail(email);
+        return users.isPresent();
+    }
+
+    public User kakaoJoin(String access_token) {
+        try {
+            User userInfo = getUserFromKakao(access_token);
+            String email = userInfo.getEmail();
+            if (!checkEmail(email)) {
+                return userRepository.save(userInfo);
+            }
+            return userRepository.findByEmail(email).orElseThrow(
+                    () -> new Exception401("인증되지 않았습니다."));
+        } catch (Exception e) {
+            throw new Exception500(e.getMessage());
+        }
+    }
+
+    public User getUserFromKakao(String access_token){
+        JsonNode userInfo = getKakaoUserInfo(access_token);
+        JsonNode kakao_account = userInfo.path("kakao_account");
+        String encodedPassword = passwordEncoder.encode(access_token);
+        JsonNode properties = userInfo.path("properties");
+
+        User user = User.builder()
+                .email(kakao_account.path("email").asText())
+                .password(encodedPassword)
+                .name(properties.path("nickname").asText())
+                .phoneNumber("01012341234")
+                .roles(Collections.singletonList("ROLE_USER"))
+                .platform("kakao")
+                .build();
+
+        return user;
+    }
+
     public JsonNode getKakaoUserInfo(String access_token) {
         final String requestUrl = "https://kapi.kakao.com/v2/user/me";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + access_token);
-        final ResponseEntity<JsonNode> response = kakaoPost(requestUrl, headers, null);
+        ResponseEntity<JsonNode> response = kakaoPost(requestUrl, headers, null);
 
         return response.getBody();
     }
@@ -160,7 +162,7 @@ public class KakaoService {
         String access_token = (String) session.getAttribute("access_token");
 
         try{
-            String email = getKakaoUserInfo(access_token).path("kakao_account").path("email").asText();
+            String email = getUserFromKakao(access_token).getEmail();
             User user = userRepository.findByEmail(email).orElseThrow(
                     () -> new Exception401("로그인된 사용자를 찾을 수 없습니다.")
             );

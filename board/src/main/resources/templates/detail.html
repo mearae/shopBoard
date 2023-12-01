@@ -105,13 +105,14 @@
         <th>title</th>
         <td th:text="${board.getTitle}"></td>
     </tr>
-    <!--    <tr>-->
-    <!--        <th>writer</th>-->
-    <!--        <td th:text="${board.getUserName}"></td>-->
-    <!--    </tr>-->
+        <tr>
+            <th>writer</th>
+            <td th:text="${board.getWriter}"></td>
+        </tr>
     <tr>
         <th>date</th>
-        <td th:text="*{#temporals.format(board.getCreateTime, 'yyyy.MM.dd hh:mm:ss')}"></td>
+<!--        <td th:text="*{#temporals.format(board.getCreateTime, 'yyyy.MM.dd hh:mm:ss')}"></td>-->
+        <td th:text="${board.getCreateTime}"></td>
     </tr>
     <tr>
         <th>contents</th>
@@ -140,7 +141,7 @@
 
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
-    <input type="text" id="writer" placeholder="작성자">
+<!--    <input type="text" id="writer" placeholder="작성자">-->
     <input type="text" id="contents" placeholder="내용">
     <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
 </div>
@@ -152,36 +153,40 @@
             <th>댓글번호</th>
             <th>작성자</th>
             <th>내용</th>
+            <th>작성일</th>
+<!--            <th>...</th>-->
         </tr>
         <tr th:each="comment: ${commentList}">
             <td th:text="${comment.id}"></td>
             <td th:text="${comment.writer}"></td>
             <td th:text="${comment.contents}"></td>
+            <td th:text="${comment.createTime}"></td>
+            <!--            <span th:if="${comment.userId}==${}"></span>-->
         </tr>
     </table>
 </div>
 
 </body>
+</html>
+
 <script th:inline="javascript">
     const commentWrite = () => {
-        const jsWriter = document.getElementById("writer").value;
         const jsContents = document.getElementById("contents").value;
-        console.log("작성자: ", jsWriter);
         console.log("내용: ", jsContents);
         const jsId = [[${board.id}]];
+        const jsWriterId = [[${board.userId}]];
         $.ajax({
             // 요청방식: post, 요청주소: /comment/save, 요청데이터: 작성자, 작성내용, 게시글번호
             type: "post",
             url: "/comment/save",
             data: {
-                "writer": jsWriter,
                 "contents": jsContents,
-                "boardId": jsId
+                "boardId": jsId,
+                "userId": jsWriterId
             },
             success: function (res) {
                 getCommentList();
                 // 사용자가 댓글을 작성을 마치면 입력 필드를 비워서 다음 댓글을 작성할 때 기존에 입력된 텍스트를 비움.
-                document.getElementById('writer').value = '';
                 document.getElementById('contents').value = '';
             },
             error: function (err) {
@@ -204,6 +209,15 @@
             },
             success: function (res) {
                 console.log("요청성공", res);
+                let userid = 0;
+                $.ajax({
+                    type: "get",
+                    url: "/user/send_user_id",
+                    success: function (resp) {
+                        userid = resp.response;
+                        console.log("id", userid);
+                    }
+                });
                 let output = "";
                 if(res.length > 0){
                     output += "<div>";
@@ -212,14 +226,19 @@
                     output += "<th>" + "번호" + "</td>";
                     output += "<th>" + "작성자" + "</td>";
                     output += "<th>" + "댓글 내용" + "</td>";
-                    //output += "<th>" + res[i].createdTime + "</td>";
+                    output += "<th>" + "작성일" + "</td>";
+                    output += "<th>" + "..." + "</td>";
                     output += "</tr>";
                     for (let i in res) {
                         output += "<tr>";
                         output += "<td>" + res[i].id + "</td>";
                         output += "<td>" + res[i].writer + "</td>";
                         output += "<td>" + res[i].contents + "</td>";
-                        //output += "<td>" + res[i].createdTime + "</td>";
+                        output += "<td>" + res[i].createTime + "</td>";
+
+                        // 여기 수정
+
+                        output += "<td>" + res[i].createTime + "</td>";
                         output += "</tr>";
                     }
                     output += "</table></div>";
@@ -240,7 +259,7 @@
     const listReq = () => {
         console.log("목록 요청");
         const page = [[${page}]];
-        location.href = "/board/paging?page="+page;
+        location.href = "/board/paging?page=" + page;
     }
     const updateReq = () => {
         console.log("수정 요청");
@@ -253,4 +272,3 @@
         location.href = "/board/delete/" + id;
     }
 </script>
-</html>

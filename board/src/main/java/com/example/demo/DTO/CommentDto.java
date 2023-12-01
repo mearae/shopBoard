@@ -3,6 +3,8 @@ package com.example.demo.DTO;
 import com.example.demo.entity.Comment;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @ToString
@@ -16,6 +18,10 @@ public class CommentDto {
 
     private String contents;
 
+    private LocalDateTime createTime;
+
+    private LocalDateTime updateTime;
+
     private Long boardId;
 
     private Long userId;
@@ -24,6 +30,8 @@ public class CommentDto {
         return Comment.builder()
                 .id(id)
                 .contents(contents)
+                .createTime(createTime)
+                .updateTime(LocalDateTime.now())
                 .build();
     }
 
@@ -32,6 +40,8 @@ public class CommentDto {
                 comment.getId(),
                 comment.getUser().getName(),
                 comment.getContents(),
+                comment.getCreateTime(),
+                comment.getUpdateTime(),
                 comment.getBoard().getId(),
                 comment.getUser().getId());
     }

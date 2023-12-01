@@ -37,6 +37,7 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    private final KakaoService kakaoService;
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
@@ -95,7 +96,7 @@ public class UserService {
             session.setAttribute("access_token", access_token);
             session.setAttribute("platform", "user");
 
-            getUserInfo(access_token);
+            getUserInfo(session);
         } catch (Exception e){
             throw new Exception500(e.getMessage());
         }
@@ -108,14 +109,33 @@ public class UserService {
         }
     }
 
+    public User getUserInfo(HttpSession session) {
+        String access_token = (String) session.getAttribute("access_token");
+        if (session.getAttribute("platform").equals("kakao")) {
+            String email = kakaoService.getUserFromKakao(access_token).getEmail();
+            return userRepository.findByEmail(email).orElseThrow(
+                    () -> new Exception401("인증되지 않았습니다."));
+        }
+        final String infoUrl = "http://localhost:8080/user/user_id";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", access_token);
+        Long user_id = userPost(infoUrl, headers, null).getBody().get("response").asLong();
+
+        return userRepository.findById(user_id).get();
+    }
+
+    public Long getCurrnetUserId(HttpSession session) {
+        return getUserInfo(session).getId();
+    }
+
     @Transactional
     public String logout(HttpSession session) {
-        String access_token = (String) session.getAttribute("access_token");
         try {
             if (session.getAttribute("platform").equals("kakao")) {
-                return "/kakao/logout";
+                kakaoService.kakaoLogout(session);
             } else {
-                User user = getUserInfo(access_token);
+                User user = getUserInfo(session);
                 killToken(user);
                 session.invalidate();
             }
@@ -177,13 +197,7 @@ public class UserService {
     public <T> ResponseEntity<JsonNode> userPost(String requestUrl, HttpHeaders headers, T body){
         try{
             RestTemplate restTemplate = new RestTemplate();
-
-            HttpEntity<T> requestEntity;
-//            if (headers != null)
-//                requestEntity = new HttpEntity<>(body, headers);
-//            else
-//                requestEntity = new HttpEntity<>(body);
-            requestEntity = new HttpEntity<>(body, headers);
+            HttpEntity<T> requestEntity = new HttpEntity<>(body, headers);
 
             return restTemplate.exchange(requestUrl, HttpMethod.POST, requestEntity, JsonNode.class);
         } catch (Exception e){
@@ -194,26 +208,11 @@ public class UserService {
     public <T> ResponseEntity<JsonNode> userGet(String requestUrl, HttpHeaders headers, T body){
         try{
             RestTemplate restTemplate = new RestTemplate();
-
-            HttpEntity<T> requestEntity;
-            if (headers != null)
-                requestEntity = new HttpEntity<>(body, headers);
-            else
-                requestEntity = new HttpEntity<>(body);
+            HttpEntity<T> requestEntity = new HttpEntity<>(body, headers);
 
             return restTemplate.exchange(requestUrl, HttpMethod.GET, requestEntity, JsonNode.class);
         } catch (Exception e){
             throw new Exception500(e.getMessage());
         }
-    }
-
-    public User getUserInfo(String access_token) {
-        final String infoUrl = "http://localhost:8080/user/user_info";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", access_token);
-        Long user_id = userPost(infoUrl, headers, null).getBody().get("response").asLong();
-
-        return userRepository.findById(user_id).get();
     }
 }

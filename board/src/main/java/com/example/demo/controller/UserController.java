@@ -68,7 +68,7 @@ public class UserController {
         return ll;
     }
 
-    @PostMapping("/user_info")
+    @PostMapping("/user_id")
     public ResponseEntity<ApiUtils.ApiResult<Long>> getCurrentUser(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         if (customUserDetails.getUser() == null){
             return ResponseEntity.ok(ApiUtils.error("현재 로그인된 user가 없습니다.", HttpStatus.UNAUTHORIZED));
@@ -85,5 +85,10 @@ public class UserController {
         }
         userService.refresh(customUserDetails.getUser().getId(), req.getSession());
         return ResponseEntity.ok(ApiUtils.success(null));
+    }
+
+    @GetMapping("/send_user_id")
+    public ResponseEntity<ApiUtils.ApiResult<Long>> getCurrnetUserId(HttpServletRequest req){
+        return ResponseEntity.ok(ApiUtils.success(userService.getCurrnetUserId(req.getSession())));
     }
 }

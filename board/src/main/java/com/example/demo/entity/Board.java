@@ -32,9 +32,11 @@ public class Board {
     private String contents;
 
     // 최초 작성 시간
+    @Column(length = 25, nullable = false)
     private LocalDateTime createTime;
 
     // 최근 수정 시간
+    @Column(length = 25, nullable = false)
     private LocalDateTime updateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -68,6 +70,7 @@ public class Board {
         // 모든 변경 사항을 셋팅
         this.title = boardDto.getTitle();
         this.contents = boardDto.getContents();
+        this.updateTime = LocalDateTime.now();
     }
 
     public void updateFromUser(User user){

@@ -3,13 +3,16 @@ package com.example.demo.service;
 import com.example.demo.DTO.CommentDto;
 import com.example.demo.entity.Board;
 import com.example.demo.entity.Comment;
+import com.example.demo.entity.User;
 import com.example.demo.repository.BoardRepository;
 import com.example.demo.repository.CommentRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -20,18 +23,26 @@ import java.util.Optional;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Comment save(CommentDto commentDto) {
+        Optional<User> optionalUser = userRepository.findById(commentDto.getUserId());
         Optional<Board> optionalBoard = boardRepository.findById(commentDto.getBoardId());
-        if (optionalBoard.isPresent()){
+        if (optionalUser.isPresent() && optionalBoard.isPresent()){
+            User user = optionalUser.get();
             Board board = optionalBoard.get();
+            Hibernate.initialize(user.getComments());
+            Hibernate.initialize(user.getBoards());
             Hibernate.initialize(board.getComments());
             Hibernate.initialize(board.getBoardFiles());
 
             Comment comment = Comment.builder()
                     .contents(commentDto.getContents())
+                    .createTime(LocalDateTime.now())
+                    .updateTime(LocalDateTime.now())
                     .board(board)
+                    .user(user)
                     .build();
             commentRepository.save(comment);
             return comment;

@@ -336,3 +336,15 @@ function updateSelectedFiles(event) {
 ```
 - 게시글의 제목을 필수로 입력하도록 수정 (nullable, required)
 - 이전에 만든 KakaoLogin과 연결 시험(일부 경로 수정)
+
+#### 2023.12.01
+- KakaoLogin과 취합
+  - User의 id를 Long으로 변경
+  - HomeController에 화면 이동 함수 추가
+  - User와 Board 1:다 연관 관계 추가
+  - User와 Comment 1:다 연관 관계 추가
+- 게시물 수정 시 이전의 제목, 내용이 나타나도록 수정
+- 게시물에 작성자의 이름도 나타나도록 수정
+- 카카오톡으로 로그인 했을 때에도 게시물과 댓글을 작성 가능하도록 수정
+- Comment에 작성일, 수정일 추가
+- Comment 수정 추가 중

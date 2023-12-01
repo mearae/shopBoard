@@ -50,7 +50,7 @@ public class BoardService {
         // 게시글 DB에 저장 후 PK 받아옴
         Long id = boardRepository.save(boardDto.toEntity()).getId();
         Board board = boardRepository.findById(id).get();
-        board.updateFromUser(userService.getUserInfo(session.getAttribute("access_token").toString()));
+        board.updateFromUser(userService.getUserInfo(session));
 
         // 추가
         if (!files[0].isEmpty()) {
@@ -158,6 +158,7 @@ public class BoardService {
 
         return boards.map(board -> new BoardDto(
                 board.getId(),
+                board.getUser().getName(),
                 board.getTitle(),
                 board.getContents(),
                 board.getCreateTime(),

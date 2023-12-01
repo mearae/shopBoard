@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,6 +21,12 @@ public class Comment {
     @Column(length = 50)
     private String contents;
 
+    @Column(length = 25, nullable = false)
+    private LocalDateTime createTime;
+
+    @Column(length = 25, nullable = false)
+    private LocalDateTime updateTime;
+
     // 1 : 다 연관 관계
     // 지연로딩
     // 연관관계 생성 시 넣어질 이름
@@ -32,9 +39,11 @@ public class Comment {
     private User user;
 
     @Builder
-    public Comment(Long id, String contents, Board board, User user) {
+    public Comment(Long id, String contents, LocalDateTime createTime, LocalDateTime updateTime, Board board, User user) {
         this.id = id;
         this.contents = contents;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
         this.board = board;
         this.user = user;
     }
