@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.DTO.BoardDto;
 import com.example.demo.DTO.CommentDto;
+import com.example.demo.DTO.FileDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,10 +23,6 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 작성자 이름
-    @Column(length = 50)
-    private String userName;
-
     // 게시물 제목
     @Column(length = 50, nullable = false)
     private String title;
@@ -40,6 +37,10 @@ public class Board {
     // 최근 수정 시간
     private LocalDateTime updateTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     // 1 : 다 연관 관계
     // 소유(1)와 비소유(다)(여기에서 확인)
     // cascade = CascadeType.REMOVE : 소유자(게시물)이 삭제될 경우 그 소유물(댓글)이 자동 삭제
@@ -52,23 +53,25 @@ public class Board {
     private List<BoardFile> boardFiles = new LinkedList<>();
 
     @Builder
-    public Board(Long id, String userName, String title, String contents, LocalDateTime createTime, LocalDateTime updateTime) {
+    public Board(Long id, String title, String contents, LocalDateTime createTime, LocalDateTime updateTime, User user, List<Comment> comments, List<BoardFile> boardFiles) {
         this.id = id;
-        this.userName = userName;
         this.title = title;
         this.contents = contents;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.user = user;
+        this.comments = comments;
+        this.boardFiles = boardFiles;
     }
 
-    public void updateFromDto(BoardDto boardDto){
+    public void updateFromDto(BoardDto boardDto) {
         // 모든 변경 사항을 셋팅
         this.title = boardDto.getTitle();
         this.contents = boardDto.getContents();
     }
 
-    public void updateFromComment(CommentDto commentDto){
-        this.comments.add(commentDto.toEntity());
+    public void updateFromUser(User user){
+        this.user = user;
     }
 
     public void clearFile(){this.boardFiles.clear();}

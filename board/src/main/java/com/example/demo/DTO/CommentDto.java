@@ -18,6 +18,8 @@ public class CommentDto {
 
     private Long boardId;
 
+    private Long userId;
+
     public Comment toEntity(){
         return Comment.builder()
                 .id(id)
@@ -28,8 +30,9 @@ public class CommentDto {
     public static CommentDto toCommentDto(Comment comment){
         return new CommentDto(
                 comment.getId(),
-                null,
+                comment.getUser().getName(),
                 comment.getContents(),
-                comment.getBoard().getId());
+                comment.getBoard().getId(),
+                comment.getUser().getId());
     }
 }

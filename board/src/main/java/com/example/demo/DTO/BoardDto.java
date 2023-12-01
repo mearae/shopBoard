@@ -25,6 +25,8 @@ public class BoardDto {
 
     private LocalDateTime updateTime;
 
+    private Long userId;
+
     public Board toEntity(){
         return Board.builder()
                 .title(title)
@@ -40,6 +42,7 @@ public class BoardDto {
                 board.getTitle(),
                 board.getContents(),
                 board.getCreateTime(),
-                board.getUpdateTime() );
+                board.getUpdateTime(),
+                board.getUser().getId());
     }
 }

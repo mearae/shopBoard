@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -38,8 +39,8 @@ public class BoardController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute BoardDto boardDto,
-                       @RequestParam MultipartFile[] files) throws IOException {
-        boardService.save(boardDto, files);
+                       @RequestParam MultipartFile[] files, HttpServletRequest req) throws IOException {
+        boardService.save(boardDto, files, req.getSession());
 
         return "redirect:/board/paging";
     }

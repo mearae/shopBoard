@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +28,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class BoardService {
+    private final UserService userService;
+
     private final BoardRepository boardRepository;
 
     private final FileRepository fileRepository;
@@ -41,11 +44,13 @@ public class BoardService {
     }
 
     @Transactional
-    public void save(BoardDto boardDto, MultipartFile[] files) throws IOException{
+    public void save(BoardDto boardDto, MultipartFile[] files, HttpSession session) throws IOException{
+
         boardDto.setCreateTime(LocalDateTime.now());
         // 게시글 DB에 저장 후 PK 받아옴
         Long id = boardRepository.save(boardDto.toEntity()).getId();
         Board board = boardRepository.findById(id).get();
+        board.updateFromUser(userService.getUserInfo(session.getAttribute("access_token").toString()));
 
         // 추가
         if (!files[0].isEmpty()) {
@@ -156,7 +161,8 @@ public class BoardService {
                 board.getTitle(),
                 board.getContents(),
                 board.getCreateTime(),
-                board.getUpdateTime()));
+                board.getUpdateTime(),
+                board.getUser().getId()));
     }
 
     public List<BoardFile> byBoardFiles(Long id){

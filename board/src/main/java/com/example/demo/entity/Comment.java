@@ -27,10 +27,15 @@ public class Comment {
     @JoinColumn(name = "board_id")
     private Board board;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
-    public Comment(Long id, String contents, Board board) {
+    public Comment(Long id, String contents, Board board, User user) {
         this.id = id;
         this.contents = contents;
         this.board = board;
+        this.user = user;
     }
 }

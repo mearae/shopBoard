@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.6'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'com.example'
@@ -22,6 +23,10 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -30,6 +35,23 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	// third party
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+	implementation group: 'com.auth0', name: 'java-jwt', version: '4.3.0'
+
+	// ** nurigo message
+	// ** nurigo -> 좌측 메뉴 -> 아래쪽 SDK 다운로드 -> Java용 SDK -> Github Repo에서 버전 확인
+	implementation 'net.nurigo:sdk:4.3.0'
+
+	implementation 'org.apache.httpcomponents:httpclient:4.3.2'
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
 }
 
 tasks.named('bootBuildImage') {
@@ -37,5 +59,25 @@ tasks.named('bootBuildImage') {
 }
 
 tasks.named('test') {
+	systemProperty 'file.encoding', 'UTF-8'
+	outputs.dir snippetsDir
 	useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		// src/docs/asciidoc == from 경로
+		from "${asciidoctor.outputDir}"
+		into 'src/main/resources/static/docs' // /static/docs로 복사!
+	}
+}
+
+jar {
+	enabled = false
 }
