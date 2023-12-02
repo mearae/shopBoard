@@ -62,12 +62,6 @@ public class UserController {
         return ResponseEntity.ok(ApiUtils.success(null));
     }
 
-    @GetMapping("/accessed")
-    public String isAccessed(HttpServletRequest req){
-        String ll = userService.isAccessed(req.getSession());
-        return ll;
-    }
-
     @PostMapping("/user_id")
     public ResponseEntity<ApiUtils.ApiResult<Long>> getCurrentUser(@AuthenticationPrincipal CustomUserDetails customUserDetails){
         if (customUserDetails.getUser() == null){

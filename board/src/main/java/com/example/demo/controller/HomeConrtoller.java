@@ -22,7 +22,10 @@ public class HomeConrtoller {
     }
 
     @GetMapping("/logined")
-    public String loginedForm() {
+    public String loginedForm(HttpServletRequest req) {
+        HttpSession session = req.getSession();
+        if (session.getAttribute("access_token") == null)
+            return "index";
         return "logined";
     }
 }

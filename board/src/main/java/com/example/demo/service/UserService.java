@@ -190,10 +190,6 @@ public class UserService {
         }
     }
 
-    public String isAccessed(HttpSession session) {
-        return (String) session.getAttribute("access_token");
-    }
-
     public <T> ResponseEntity<JsonNode> userPost(String requestUrl, HttpHeaders headers, T body){
         try{
             RestTemplate restTemplate = new RestTemplate();
