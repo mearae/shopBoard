@@ -59,4 +59,18 @@ public class CommentService {
         }
         return commentDtos;
     }
+
+    @Transactional
+    public void delete(Long id) {
+        commentRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void update(CommentDto commentDto) {
+        Optional<Comment> commentOptional = commentRepository.findById(commentDto.getId());
+        if (commentOptional.isPresent()){
+            Comment comment = commentOptional.get();
+            comment.updateFromDto(commentDto);
+        }
+    }
 }

@@ -47,4 +47,9 @@ public class Comment {
         this.board = board;
         this.user = user;
     }
+
+    public void updateFromDto(CommentDto commentDto){
+        this.contents = commentDto.getContents();
+        this.updateTime = LocalDateTime.now();
+    }
 }

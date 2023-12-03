@@ -28,6 +28,20 @@ public class CommentController {
         }
     }
 
+    @GetMapping("/delete/{id}")
+    public ResponseEntity delete(@PathVariable Long id){
+        commentService.delete(id);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/update")
+    public ResponseEntity update(@ModelAttribute CommentDto commentDto){
+        commentService.update(commentDto);
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/comments")
     public ResponseEntity<List<CommentDto>> commentList(@ModelAttribute BoardDto boardDto){
         Long boardId = boardDto.getId();

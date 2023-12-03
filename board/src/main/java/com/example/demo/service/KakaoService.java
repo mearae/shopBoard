@@ -103,7 +103,7 @@ public class KakaoService {
             user.setAccess_token(access_token);
             user.setRefresh_token(refresh_token);
             userRepository.save(user);
-            return "http://localhost:8080/logined";
+            return "http://localhost:8080/";
         } catch (Exception e){
             throw new Exception401("인증되지 않음.");
         }

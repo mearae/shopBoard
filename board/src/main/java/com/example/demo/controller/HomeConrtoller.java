@@ -20,12 +20,4 @@ public class HomeConrtoller {
     public String joinForm() {
         return "join";
     }
-
-    @GetMapping("/logined")
-    public String loginedForm(HttpServletRequest req) {
-        HttpSession session = req.getSession();
-        if (session.getAttribute("access_token") == null)
-            return "index";
-        return "logined";
-    }
 }
