@@ -1,4 +1,4 @@
-# shopBoard v2.2.1
+# shopBoard v2.3.0
 
 ## ※ 개발환경
 ###### (aplication.yml)
@@ -16,25 +16,42 @@ Thymeleaf
 ## ※ 게시판 주요기능
 ### 게시글
 1. 게시글 작성(/board/save)   
-  (\-) 파일(이미지) 첨부 (단일/다중)
+  \- 파일(이미지) 첨부 (단일/다중)
 2. 게시판 페이지(/board/, /board/paging)   
   \- 한 페이지 게시글 5개   
   \- 최대 3개 페이지씩   
   \- /board/paging?page=1   
   \- /board/paging/1   
+  <p align="center">
+    <img src="./image/page1.png" alt="image_01"><br><br>
+    <img src="./image/page2.png" alt="image_02"><br><br>
+  </p>
 3. 게시글 조회(/board/{id})
+  <div class="centered-image">
+    <img src="./image/detail.png" alt="image_06.png">
+  </div>
 4. 게시글 수정(/board/update/{id})   
   \- 상세화면에서 수정 버튼 클릭 (작성자일 경우에만 보임)   
   \- 서버에서 해당 게시글의 정보를 가지고 수정 화면 출력   
+  <div class="centered-image">
+    <img src="./image/update.png" alt="image_06.png">
+  </div>
 5. 게시글 수정 적용(/board/update)   
   \- 제목, 내용 수정 입력 받아서 서버로 요청    
 6. 게시글 삭제(/board/delete/{id})   
   \- 상세화면에서 삭제 버튼 클릭 (작성자일 경우에만 보임)
 7. 게시글 작성 화면으로 이동(/board/create)
+  <div class="centered-image">
+    <img src="./image/create.png" alt="image_06.png">
+  </div>
 
 ### 댓글
 1. 댓글 작성(/comment/save)
 2. 게시글에 달린 댓글들 보이기(/comment/comments)
+<p align="center">
+  <img src="./image/comment1.png" alt="image_01"><br><br>
+  <img src="./image/comment2.png" alt="image_02"><br><br>
+</p>
 3. 댓글 삭제(/comment/delete/{id})   
   \- 작성자일 경우에 보이는 댓글 옆 삭제 버튼 클릭
 4. 댓글 수정(/comment/update)    
@@ -80,20 +97,33 @@ Thymeleaf
 ## ※ 화면이동
 1. 메인 화면 이동(/)   
   \- 로그인 여부를 보고 로그인 화면 혹은 로그인 후 화면으로 이동시켜줌
+  <p align="center">
+    <img src="./image/Home.png" alt="image_01"><br><br>
+    <img src="./image/logined.png" alt="image_02"><br><br>
+  </p>
 2. 회원가입 화면 이동(/join)
+<div class="centered-image">
+  <img src="./image/join.png" alt="image_06.png">
+</div>
 
 ## ※ 향후 업데이트 예정 기능
 1. 자신이 작성한 게시글 모아보기
 2. 작성자의 게시글 모아보기
+3. 게시글 수정 시 이전에 첨부한 파일들도 보이기
 
 #    
-#### v2.2.1(2023.12.04)
+#### v2.3.0(2023.12.04)
+1. [수정] 카카오톡도 함께 로그아웃(/kakao/fulllogout)   
+ \- 로그아웃 후 나오는 화면 및 기타 오류 수정
+2. 댓글 수정 및 삭제 버튼이 작성자에게만 보이도록 오류를 수정
+
+#### v2.2.1(2023.12.03)
 1. 자신의 게시글만 수정, 삭제 가능하도록 버튼 설정
 2. 자신의 댓글만 수정, 삭제 가능하도록 버튼 설정
 3. 댓글 수정 버튼을 눌렀을 경우 작성공간과 댓글작성 버튼이 나옴
 4. 댓글 수정 버튼을 한 번 더 반복해서 누르면 수정이 취소됨
 
-#### v2.2.0(2023.12.04)
+#### v2.2.0(2023.12.03)
 1. [추가] 댓글 삭제(/comment/delete/{id})
 2. [추가] 댓글 수정(/comment/update)   
   \- 작성공간에 새로운 내용을 적고 댓글작성 버튼을 누르면 입력한 내용으로 서버로 요청

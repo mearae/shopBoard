@@ -159,7 +159,6 @@
 
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
-<!--    <input type="text" id="writer" placeholder="작성자">-->
     <input type="text" id="contents" placeholder="내용">
     <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
 </div>
@@ -211,12 +210,11 @@
 
     $(document).ready(function(){
         getUserId();
-        getCommentList();
     });
 
-    function getCommentList() {
+    async function getCommentList() {
         const bId = [[${board.id}]];
-        $.ajax({
+        await $.ajax({
             type: "get",
             url: "/comment/comments",
             data: {
@@ -308,6 +306,7 @@
                 userId = res.response;
                 console.log("id", userId);
                 checkButtonVisibility();
+                getCommentList();
             },
             error: function (err) {
                 console.log("요청실패", err);

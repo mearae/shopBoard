@@ -164,14 +164,13 @@ public class KakaoService {
         try{
             String email = getUserFromKakao(access_token).getEmail();
             User user = userRepository.findByEmail(email).orElseThrow(
-                    () -> new Exception401("로그인된 사용자를 찾을 수 없습니다.")
-            );
+                    () -> new Exception401("로그인된 사용자를 찾을 수 없습니다."));
             HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/x-www-form-urlencoded");
             headers.set("Authorization", "Bearer " + access_token);
             kakaoPost(requestUrl, headers, null);
             user.setAccess_token(null);
             user.setRefresh_token(null);
-            userRepository.save(user);
             session.invalidate();
         }
         catch (Exception500 e){
@@ -185,10 +184,17 @@ public class KakaoService {
     @Transactional
     public String kakaoFullLogout(HttpSession session) {
         try{
+            String access_token = (String) session.getAttribute("access_token");
+            String email = getUserFromKakao(access_token).getEmail();
+            User user = userRepository.findByEmail(email).orElseThrow(
+                    () -> new Exception401("로그인된 사용자를 찾을 수 없습니다."));
+            user.setAccess_token(null);
+            user.setRefresh_token(null);
+            session.invalidate();
             StringBuffer url = new StringBuffer();
             url.append("https://kauth.kakao.com/oauth/logout?");
             url.append("client_id=").append(restApi);
-            url.append("&logout_redirect_uri=" + "http://localhost:8080/kakao/logout");
+            url.append("&logout_redirect_uri=" + "http://localhost:8080/");
 
             return url.toString();
         }
@@ -238,12 +244,7 @@ public class KakaoService {
     public <T> ResponseEntity<JsonNode> userGet(String requestUrl, HttpHeaders headers, T body){
         try{
             RestTemplate restTemplate = new RestTemplate();
-
-            HttpEntity<T> requestEntity;
-            if (headers != null)
-                requestEntity = new HttpEntity<>(body, headers);
-            else
-                requestEntity = new HttpEntity<>(body);
+            HttpEntity<T> requestEntity = new HttpEntity<>(body, headers);
 
             return restTemplate.exchange(requestUrl, HttpMethod.GET, requestEntity, JsonNode.class);
         } catch (Exception e){
@@ -254,12 +255,7 @@ public class KakaoService {
     public <T> ResponseEntity<JsonNode> kakaoPost(String requestUrl, HttpHeaders headers, T body){
         try{
             RestTemplate restTemplate = new RestTemplate();
-
-            HttpEntity<T> requestEntity;
-            if (headers != null)
-                requestEntity = new HttpEntity<>(body, headers);
-            else
-                requestEntity = new HttpEntity<>(body);
+            HttpEntity<T> requestEntity = new HttpEntity<>(body, headers);
 
             return restTemplate.exchange(requestUrl, HttpMethod.POST, requestEntity, JsonNode.class);
         } catch (Exception e){

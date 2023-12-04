@@ -76,21 +76,6 @@
                console.error('Error:', error);
             }
         }
-
-        async function kakaoLogout() {
-            try {
-                const response = await fetch('http://localhost:8080/user/logout', {
-                    method: 'GET',
-                });
-                const result = await response.text();
-
-                alert("로그아웃에 성공했습니다!");
-                console.log(location.href);
-                location.href = '/kakao/fulllogout';
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
     </script>
 </head>
 <body>
@@ -103,7 +88,7 @@
     </div>
     <div class="col">
         <button class="btn btn-lg btn-secondary" onclick="logout()">로그아웃</button>
-        <button type="button" class="btn btn-lg btn-secondary" onclick="kakaoLogout()">카카오 로그아웃</button>
+        <button type="button" class="btn btn-lg btn-secondary" onclick="location.href='/kakao/fulllogout'">카카오 로그아웃</button>
         <!--        <button type="button" class="btn btn-lg btn-secondary" onclick="location.href='http://localhost:8080/kakao/fulllogout'">카카오 로그아웃</button>-->
     </div>
     <div class="col">
