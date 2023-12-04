@@ -1,10 +1,8 @@
-package com.example.demo.service;
+package com.example.demo.board;
 
-import com.example.demo.DTO.BoardDto;
-import com.example.demo.entity.Board;
-import com.example.demo.entity.BoardFile;
-import com.example.demo.repository.BoardRepository;
-import com.example.demo.repository.FileRepository;
+import com.example.demo.boardFile.BoardFile;
+import com.example.demo.boardFile.FileRepository;
+import com.example.demo.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

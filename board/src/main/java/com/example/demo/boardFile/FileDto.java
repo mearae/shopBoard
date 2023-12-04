@@ -1,6 +1,5 @@
-package com.example.demo.DTO;
+package com.example.demo.boardFile;
 
-import com.example.demo.entity.BoardFile;
 import lombok.*;
 
 @Setter

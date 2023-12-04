@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package com.example.demo.boardFile;
 
-import com.example.demo.entity.BoardFile;
+import com.example.demo.boardFile.BoardFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

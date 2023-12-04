@@ -1,12 +1,12 @@
-package com.example.demo.service;
+package com.example.demo.comment;
 
-import com.example.demo.DTO.CommentDto;
-import com.example.demo.entity.Board;
-import com.example.demo.entity.Comment;
-import com.example.demo.entity.User;
-import com.example.demo.repository.BoardRepository;
-import com.example.demo.repository.CommentRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.comment.CommentDto;
+import com.example.demo.board.Board;
+import com.example.demo.comment.Comment;
+import com.example.demo.user.User;
+import com.example.demo.board.BoardRepository;
+import com.example.demo.comment.CommentRepository;
+import com.example.demo.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;

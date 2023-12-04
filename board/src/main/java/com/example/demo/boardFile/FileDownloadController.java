@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.boardFile;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

@@ -1,5 +1,6 @@
-package com.example.demo.entity;
+package com.example.demo.boardFile;
 
+import com.example.demo.board.Board;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

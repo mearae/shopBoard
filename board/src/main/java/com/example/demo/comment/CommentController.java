@@ -1,9 +1,6 @@
-package com.example.demo.controller;
+package com.example.demo.comment;
 
-import com.example.demo.DTO.BoardDto;
-import com.example.demo.DTO.CommentDto;
-import com.example.demo.entity.Comment;
-import com.example.demo.service.CommentService;
+import com.example.demo.board.BoardDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
