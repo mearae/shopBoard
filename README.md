@@ -1,6 +1,6 @@
-# shopBoard v2.0.1
+# shopBoard v2.2.1
 
-※ 개발환경
+## ※ 개발환경
 IDE: IntelliJ IDEA Community
 Gradle - Groovy, Java 2.7.17
 Jar 11
@@ -47,8 +47,7 @@ Thymeleaf
 - 파일 다운로드
 1. 게시글에 첨부한 파일(이미지) 다운(/download/{uuid}/{filename})
 
-## ※ 회원가입 및 로그인 주요기능    
-[KakaoLogin Project](https://github.com/mearae/kakaoLogin)
+## ※ 회원가입 및 로그인 주요기능 [kakaoLogin Project](https://github.com/mearae/kakaoLogin)
 ### 일반 회원
 1. 회원가입(/user/join)
   - 이메일, 비밀번호, 이름, 전화번호
@@ -66,13 +65,13 @@ Thymeleaf
   - 프로그램 내에서만 사용(직접 사용 불가)
 
 ### 카카오톡 회원
-1. 카카오톡로 회원가입 및 로그인(/kakao/callback)
+1. 카카오톡으로 회원가입 및 로그인(/kakao/callback)
 2. 카카오톡 인증코드 발급(/kakao/oauth)
 3. 카카오톡로 다시 로그인(/kakao/relogin)
   - 프로그램 정상 실행 확인용
 4. 카카오톡로 로그아웃(/kakao/logout)
   - 카카오톡은 로그아웃 안 됨
-5. 카카오톡도 로그아웃(/kakao/fulllogout)
+5. 카카오톡도 함께 로그아웃(/kakao/fulllogout)
 6. 카카오톡과 웹 연결 끊기(/kakao/disconnect)
 7. 카카오톡 회원들 출력(/kakao/userlist)
   - 프로그램 정상 실행 확인용
@@ -118,7 +117,7 @@ Thymeleaf
 3. KakaoLogin 보안 강화 및 일부 버그 수정
 
 #### v2.0.0 (2023.12.01)
-1. KakaoLogin과 취합
+1. kakaoLogin과 취합
 2. [수정] 로그인 후 화면으로 이동(/logined)
 3. [수정] 회원가입 화면으로 이동(/join)
 
@@ -148,7 +147,7 @@ Thymeleaf
 1. [추가] 댓글 작성(/comment/save)
 2. [추가] 게시글에 달린 댓글들 보이기(/comment/comments)
 
-#### v0.1.0 (2023.11.23)
+#### v1.1.0 (2023.11.23)
 1. [추가] 게시판 페이지 보기(/board/paging, /board/)
   - 한 페이지 5개씩
   - 페이지 최대 3개씩
@@ -160,7 +159,7 @@ Thymeleaf
 5. [추가] 게시글 수정 적용(/board/update)
 6. [추가] 게시글 삭제(/board/{id})
 
-#### v0.0.0 (2023.11.21)
+#### v1.0.0 (2023.11.21)
 1. [추가] 게시글 작성(/board/save)
   - 제목, 내용
 2. [추가] 메인 페이지 이동(/)
