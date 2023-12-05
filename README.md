@@ -1,4 +1,4 @@
-# shopBoard v2.3.0
+# shopBoard v2.2.2
 
 ## ※ 개발환경
 ###### (aplication.yml)
@@ -23,17 +23,17 @@ Thymeleaf
   \- 한 페이지 게시글 5개 <br>
   \- 최대 3개 페이지씩 <br>
   \- /board/paging?page=1 <br>
-  \- /board/paging/1 <br><p align="center">
-    <img src="./image/page1.png" alt="image_01"><br><br>
-    <img src="./image/page2.png" alt="image_02"><br><br></p>
+  \- /board/paging/1 <br> <p align="center">
+    <img src="./image/page1.png" alt="image_01"> <br><br>
+    <img src="./image/page2.png" alt="image_02"> <br><br></p>
 
-3. 게시글 조회(/board/{id}) <br><div class="centered-image">
-    <img src="./image/detail.png" alt="image_06.png"></div><br>
+3. 게시글 조회(/board/{id}) <br> <div class="centered-image">
+    <img src="./image/detail.png" alt="image_06.png"> </div><br>
 
 4. 게시글 수정(/board/update/{id}) <br>
   \- 상세화면에서 수정 버튼 클릭 (작성자일 경우에만 보임) <br>
-  \- 서버에서 해당 게시글의 정보를 가지고 수정 화면 출력 <br><div class="centered-image">
-    <img src="./image/update.png" alt="image_06.png"></div>
+  \- 서버에서 해당 게시글의 정보를 가지고 수정 화면 출력 <br> <div class="centered-image">
+    <img src="./image/update.png" alt="image_06.png"> </div>
 
 5. 게시글 수정 적용(/board/update) <br>
   \- 제목, 내용 수정 입력 받아서 서버로 요청    
@@ -41,13 +41,13 @@ Thymeleaf
 6. 게시글 삭제(/board/delete/{id}) <br>
   \- 상세화면에서 삭제 버튼 클릭 (작성자일 경우에만 보임)
 
-7. 게시글 작성 화면으로 이동(/board/create) <br><div class="centered-image">
-    <img src="./image/create.png" alt="image_06.png"></div><br>
+7. 게시글 작성 화면으로 이동(/board/create) <br> <div class="centered-image">
+    <img src="./image/create.png" alt="image_06.png"> </div><br>
 
 ### 댓글
 1. 댓글 작성(/comment/save)
 
-2. 게시글에 달린 댓글들 보이기(/comment/comments) <br><p align="center">
+2. 게시글에 달린 댓글들 보이기(/comment/comments) <br> <p align="center">
   <img src="./image/comment1.png" alt="image_01"> <br><br>
   <img src="./image/comment2.png" alt="image_02"> <br><br></p>
 
@@ -111,12 +111,12 @@ Thymeleaf
 
 ## ※ 화면이동
 1. 메인 화면 이동(/) <br>
-  \- 로그인 여부를 보고 로그인 화면 혹은 로그인 후 화면으로 이동시켜줌 <br><p align="center">
-    <img src="./image/Home.png" alt="image_01"><br><br>
-    <img src="./image/logined.png" alt="image_02"><br><br></p>
+  \- 로그인 여부를 보고 로그인 화면 혹은 로그인 후 화면으로 이동시켜줌 <br> <p align="center">
+    <img src="./image/Home.png" alt="image_01"> <br><br>
+    <img src="./image/logined.png" alt="image_02"> <br><br></p>
 
-2. 회원가입 화면 이동(/join) <br><div class="centered-image">
-  <img src="./image/join.png" alt="image_06.png"></div>
+2. 회원가입 화면 이동(/join) <br> <div class="centered-image">
+  <img src="./image/join.png" alt="image_06.png"> </div>
 
 ## ※ 향후 업데이트 예정 기능
 1. 자신이 작성한 게시글 모아보기
@@ -126,7 +126,7 @@ Thymeleaf
 3. 게시글 수정 시 이전에 첨부한 파일들도 보이기
 
 #    
-#### v2.3.0(2023.12.04)
+#### v2.2.2(2023.12.04)
 1. [수정] 카카오톡도 함께 로그아웃(/kakao/fulllogout) <br>
  \- 로그아웃 후 나오는 화면 및 기타 오류 수정
 2. 댓글 수정 및 삭제 버튼이 작성자에게만 보이도록 오류를 수정
