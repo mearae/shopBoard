@@ -21,17 +21,15 @@ Thymeleaf
   \- 한 페이지 게시글 5개<br>
   \- 최대 3개 페이지씩<br>
   \- /board/paging?page=1<br>
-  \- /board/paging/1<br>
-  <p align="center">
+  \- /board/paging/1<br><p align="center">
     <img src="./image/page1.png" alt="image_01"><br><br>
     <img src="./image/page2.png" alt="image_02"><br><br>
   </p><br>
-3. 게시글 조회(/board/{id})
-  <div class="centered-image">
+3. 게시글 조회(/board/{id})<div class="centered-image">
     <img src="./image/detail.png" alt="image_06.png">
   </div><br>
 4. 게시글 수정(/board/update/{id})<br>
-  (-) 상세화면에서 수정 버튼 클릭 (작성자일 경우에만 보임)<br>
+  \- 상세화면에서 수정 버튼 클릭 (작성자일 경우에만 보임)<br>
   \- 서버에서 해당 게시글의 정보를 가지고 수정 화면 출력<br>
   <div class="centered-image">
     <img src="./image/update.png" alt="image_06.png">
