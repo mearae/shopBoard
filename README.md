@@ -23,8 +23,7 @@ Thymeleaf
   \- /board/paging?page=1<br>
   \- /board/paging/1<br><p align="center">
     <img src="./image/page1.png" alt="image_01"><br><br>
-    <img src="./image/page2.png" alt="image_02"><br><br>
-  </p><br>
+    <img src="./image/page2.png" alt="image_02"><br><br></p><br>
 3. 게시글 조회(/board/{id})<div class="centered-image">
     <img src="./image/detail.png" alt="image_06.png">
   </div><br>
