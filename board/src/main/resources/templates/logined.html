@@ -53,7 +53,7 @@
 
         async function print_users() {
               try {
-                  const response = await fetch('http://localhost:8080/user/users', {
+                  const response = await fetch('/user/users', {
                       method: 'GET',
                   });
                   const result = await response.json();
@@ -64,7 +64,7 @@
 
         async function logout() {
             try {
-                const response = await fetch('http://localhost:8080/user/logout', {
+                const response = await fetch('/user/logout', {
                    method: 'GET',
                 });
                 const result = await response.text();
